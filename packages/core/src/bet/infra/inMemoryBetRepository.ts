@@ -1,22 +1,21 @@
-import {IBetRepository} from '../domain/iBetRepository'
-import {Bet} from '../../bet/domain/bet'
+import {IBetRepository} from '../domain/IBetRepository'
+import {Bet} from '../domain/Bet'
 
 export class InMemoryBetRepository implements IBetRepository{
 
     bets: Bet[]
 
-    constructor(bets: Bet[] = null) {
-        this.bets = bets == null ? [] : bets
+    constructor() {
+        this.bets = [];
     }
 
-    getById(betId: string) {
-        return this.bets[0]
+    getById(betId: string) : Promise<Bet> {
+        const bet = this.bets.find(x => x.getBetId() == betId);
+        return new Promise(resolve => resolve(bet))
     }
 
-    save(betId: string,
-        description: string,
-        endDate: Date,
-        tokens: number) {
-            this.bets.push(new Bet())
-        }
+    save(bet: Bet): Promise<void> {
+        this.bets.push(bet);
+        return new Promise(resolve => resolve())
+    }
 }

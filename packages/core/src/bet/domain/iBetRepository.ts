@@ -1,7 +1,6 @@
+import { Bet } from "./bet";
+
 export interface IBetRepository {
-    getById(betId: string)
-    save(betId: string,
-        description: string,
-        endDate: Date,
-        tokens: number)    
+    getById(betId: string) : Promise<Bet>
+    save(bet: Bet) : Promise<void>
 }
