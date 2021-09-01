@@ -1,8 +1,9 @@
-import { IDateTimeProvider } from "../../src/bet/domain/iDateTimeProvider";
-
+import { IDateTimeProvider } from '../../src/bet/IDateTimeProvider';
 export class LocalDateTimeProvider implements IDateTimeProvider {
-    constructor(private date: Date) {}
-    
+
+    constructor(private date: Date) {
+
+    }
     getDate(): Date {
         return this.date
     }

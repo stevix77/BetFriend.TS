@@ -1,11 +1,11 @@
-import {IUuidGenerator} from '../src/bet/domain/IUuidGenerator'
-import {LaunchBetCommand} from '../src/bet/domain/usecases/launchBet/LaunchBetCommand'
-import {LaunchBetCommandHandler} from '../src/bet/domain/usecases/launchBet/LaunchBetCommandHandler'
-import {LocalUUIDGenerator} from './infra/LocalUUIDGenerator'
-import {IBetRepository} from '../src/bet/domain/IBetRepository'
-import {InMemoryBetRepository} from '../src/bet/infra/InMemoryBetRepository'
-import { LocalDateTimeProvider } from './infra/LocalDateTimeProvider'
-import { IDateTimeProvider } from '../src/bet/domain/iDateTimeProvider'
+import {IUuidGenerator} from '../src/bet/IUuidGenerator'
+import {LaunchBetCommand} from '../src/bet/usecases/launchBet/LaunchBetCommand'
+import {LaunchBetCommandHandler} from '../src/bet/usecases/launchBet/LaunchBetCommandHandler'
+import {LocalUUIDGenerator} from './adapteur/LocalUUIDGenerator'
+import {IBetRepository} from '../src/bet/IBetRepository'
+import {InMemoryBetRepository} from '../../infrastructure/repositories/inMemory/InMemoryBetRepository'
+import { LocalDateTimeProvider } from './adapteur/LocalDateTimeProvider'
+import { IDateTimeProvider } from '../src/bet/IDateTimeProvider'
 
 describe("launch bet handler", () => {
     test('should create bet when model is valid', async () => {

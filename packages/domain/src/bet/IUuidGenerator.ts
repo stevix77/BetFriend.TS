@@ -1,3 +1,3 @@
 export interface IUuidGenerator {
-    generate() : any
+    generate() : string
 }
