@@ -1,10 +1,10 @@
 import {IUuidGenerator} from '../src/bet/IUuidGenerator'
 import {LaunchBetCommand} from '../src/bet/usecases/launchBet/LaunchBetCommand'
 import {LaunchBetCommandHandler} from '../src/bet/usecases/launchBet/LaunchBetCommandHandler'
-import {LocalUUIDGenerator} from './adapteur/LocalUUIDGenerator'
+import {LocalUUIDGenerator} from './adapters/LocalUUIDGenerator'
 import {IBetRepository} from '../src/bet/IBetRepository'
 import {InMemoryBetRepository} from '../../infrastructure/repositories/inMemory/InMemoryBetRepository'
-import { LocalDateTimeProvider } from './adapteur/LocalDateTimeProvider'
+import { LocalDateTimeProvider } from './adapters/LocalDateTimeProvider'
 import { IDateTimeProvider } from '../src/bet/IDateTimeProvider'
 
 describe("launch bet handler", () => {
@@ -12,13 +12,13 @@ describe("launch bet handler", () => {
         //arrange
         const uuidGenerator: IUuidGenerator = new LocalUUIDGenerator();
         const description = "description"
-        const endDate: Date = new Date(2222, 2, 2)
+        const endDate: Date = new Date(2021, 8, 2)
         const command = new LaunchBetCommand(description, 
                                             endDate,
                                             30)
         const betRepository: IBetRepository = new InMemoryBetRepository()
         const handler = new LaunchBetCommandHandler(betRepository, 
-                                                new LocalDateTimeProvider(new Date()),
+                                                new LocalDateTimeProvider(new Date(2021, 4, 4)),
                                                 uuidGenerator)
 
         //act
