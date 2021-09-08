@@ -3,15 +3,14 @@ import {Bet} from '../../../domain/src/bet/Bet'
 
 export class InMemoryBetRepository implements IBetRepository{
 
-    bets: Bet[]
+    private bets: Bet[]
 
     constructor() {
         this.bets = [];
     }
 
-    getById(betId: string) : Promise<Bet> {
-        const bet = this.bets.find(x => x.getBetId() == betId);
-        return new Promise(resolve => resolve(bet))
+    getBets() {
+        return this.bets;
     }
 
     save(bet: Bet): Promise<void> {

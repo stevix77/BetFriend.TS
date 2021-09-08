@@ -14,8 +14,5 @@ export class Bet {
         getDescription(): string {
             return this.description;
         }
-        getBetId(): any {
-            return this.betId;
-        }
         
 }

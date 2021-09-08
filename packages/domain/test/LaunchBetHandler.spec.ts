@@ -1,40 +1,43 @@
 import {IUuidGenerator} from '../src/bet/IUuidGenerator'
 import {LaunchBetCommand} from '../src/bet/usecases/launchBet/LaunchBetCommand'
-import {IPresenterOutput, LaunchBetCommandHandler} from '../src/bet/usecases/launchBet/LaunchBetCommandHandler'
+import { LaunchBetCommandHandler} from '../src/bet/usecases/launchBet/LaunchBetCommandHandler'
 import {LocalUUIDGenerator} from './adapters/LocalUUIDGenerator'
 import {IBetRepository} from '../src/bet/IBetRepository'
 import {InMemoryBetRepository} from '../../infrastructure/repositories/inMemory/InMemoryBetRepository'
 import { LocalDateTimeProvider } from './adapters/LocalDateTimeProvider'
 import { IDateTimeProvider } from '../src/bet/IDateTimeProvider'
-import { Bet } from '../src/bet/Bet'
+import { LaunchBetPresenter } from './adapters/LaunchBetPresenter'
+import { LaunchCommandBuilder } from './builders/launchCommandBuilder'
+import { LaunchCommandHandlerBuilder } from './builders/LaunchCommandHandlerBuilder'
 
 describe("launch bet handler", () => {
+    
     test('should create bet when model is valid', async () => {
+        
         //arrange
-        const uuidGenerator: IUuidGenerator = new LocalUUIDGenerator();
-        const description = "description"
-        const endDate: Date = new Date(2021, 8, 2)
-        const command = new LaunchBetCommand(description, 
-                                            endDate,
-                                            30)
-        const presenter = new LaunchBetPresenter();
-        const betRepository: IBetRepository = new InMemoryBetRepository()
-        const handler = new LaunchBetCommandHandler(betRepository, 
-                                                new LocalDateTimeProvider(new Date(2021, 4, 4)),
-                                                uuidGenerator,
-                                                presenter)
+        const command = new LaunchCommandBuilder()
+                                    .withDescription("description")
+                                    .withEndDate(new Date(2021, 8, 2))
+                                    .withTokens(30)
+                                    .build();
+        const repo = new InMemoryBetRepository();
+        const handler = new LaunchCommandHandlerBuilder()
+                                .withBetRepository(repo)
+                                .withDateTimeProvider(new LocalDateTimeProvider(new Date(2021, 4, 4)))
+                                .build();
 
         //act
         await handler.handle(command)
 
         //assert
-        expect(presenter.viewModel.id).not.toBeNull()
-        expect(presenter.viewModel.description).toEqual(command.description)
-        expect(presenter.viewModel.tokens).toEqual(command.tokens)
-        expect(presenter.viewModel.endDate).toEqual(command.endDate)
+        const bet = repo.getBets()[0];
+        expect(bet).not.toBe(null)
+        expect(bet.getTokens()).toEqual(command.tokens)
+        expect(bet.getEndDate()).toEqual(command.endDate)
+        expect(bet.getDescription()).toEqual(command.description)
     });
 
-    test('should throw Error when description is empty', async() => {
+    test('bet should not be saved when description is empty', async() => {
         
         //arrange
         const description = ""
@@ -43,7 +46,7 @@ describe("launch bet handler", () => {
                                             endDate,
                                             1)
 
-        const betRepository: IBetRepository = new InMemoryBetRepository()
+        const betRepository = new InMemoryBetRepository()
         const presenter = new LaunchBetPresenter()
         const handler = new LaunchBetCommandHandler(betRepository, new LocalDateTimeProvider(new Date(2000, 1, 1)), new LocalUUIDGenerator(), presenter)
 
@@ -51,8 +54,8 @@ describe("launch bet handler", () => {
         await handler.handle(command);
 
         //assert
-        expect(presenter.viewModel.error.property).toBe("description")
-        expect(presenter.viewModel.error.message).toBe('description is required')
+        const bet = betRepository.getBets()[0] 
+        expect(bet).toBe(undefined)
     })
 
     test('should throw Error when the end date is before current date', async() => {
@@ -65,7 +68,7 @@ describe("launch bet handler", () => {
                                             endDate,
                                             1)
 
-        const betRepository: IBetRepository = new InMemoryBetRepository()
+        const betRepository = new InMemoryBetRepository()
         const dateTimeProvider: IDateTimeProvider = new LocalDateTimeProvider(new Date(2021, 7, 20))
         const presenter = new LaunchBetPresenter()
         const handler = new LaunchBetCommandHandler(betRepository, dateTimeProvider, new LocalUUIDGenerator(), presenter)
@@ -74,26 +77,9 @@ describe("launch bet handler", () => {
         await handler.handle(command)
         
         //assert
-        expect(presenter.viewModel.error.property).toBe("endDate")
-        expect(presenter.viewModel.error.message).toBe('end date must be after the current date')
+        const bet = betRepository.getBets()[0] 
+        expect(bet).toBe(undefined)
     })
+
+    
 })
-
-export class LaunchBetPresenter implements IPresenterOutput<BetViewModel> {
-    viewModel: BetViewModel | any = {}
-    present(obj: Bet) : void{
-        this.viewModel = {
-            id: obj.getBetId(),
-            description: obj.getDescription(),
-            endDate: obj.getEndDate(),
-            tokens: obj.getTokens()
-        };
-    }
-}
-
-export class BetViewModel {
-    id: string;
-    description: string;
-    endDate: Date;
-    tokens: number;
-}
