@@ -1,0 +1,26 @@
+{
+  "name": "@betfriend/infrastructure",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/infrastructure/src/index.js",
+  "types": "dist/infrastructure/src/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepublish": "tsc"
+  },
+  "author": "Stevix77",
+  "license": "ISC",
+  "dependencies": {
+    "vue": "^3.2.19"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "jest": "^27.0.4",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.4"
+  }
+}
