@@ -1,5 +1,5 @@
-import {IBetRepository} from '../../../domain/src/bet/IBetRepository'
 import {Bet} from '../../../domain/src/bet/Bet'
+import { IBetRepository } from '../../../domain/src/bet/IBetRepository'
 
 export class InMemoryBetRepository implements IBetRepository{
 

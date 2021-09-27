@@ -1,5 +1,9 @@
 {
+  "dependencies": {
+    "@betfriend/core":"1.0.0"
+  },
   "devDependencies": {
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "@betfriend/core":"1.0.0"
   }
 }
